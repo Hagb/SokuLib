@@ -77,6 +77,10 @@ namespace v2 {
 		return (this->*union_cast<void (GameObjectBase::*)(int, int, int, int, short, short, short)>(0x4B0E40))(left, top, right, bottom, rotation, rotAnchorX, rotAnchorY);
 	}
 
+	void GameObject::trackOpponent(float min, float max, float yOffset) {
+		return (this->*union_cast<void (GameObjectBase::*)(float, float, float)>(0x48CCA0))(min, max, yOffset);
+	}
+
 	void GameObject::setTail(short actionId, float paramA, int paramB, int paramC, int paramD) {
 		return (this->*union_cast<void (GameObject::*)(short, float, int, int, int)>(0x4b0f50))(actionId, paramA, paramB, paramC, paramD);
 	}

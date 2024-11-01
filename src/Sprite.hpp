@@ -134,6 +134,8 @@ namespace SokuLib
 
 		static Palette& currentPalette;
 	};
+
+	void loadPalette(const char *name);
 }
 
 #endif //SOKULIB_SPRITE_HPP

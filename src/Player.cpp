@@ -92,41 +92,49 @@ namespace v2 {
 	auto& commonPatternData = *reinterpret_cast<Map<int, CharacterSequenceData*>*>(0x89aae8);
 	auto& commonTextures = *reinterpret_cast<Vector<int>*>(0x89aac4);
 
-	Player::Player(const PlayerInfo& playerInfo) : keyManager(*playerInfo.keyManager) {
-		gameData.owner = gameData.ally = this;
+	Player::Player(const PlayerInfo& playerInfo) :
+		keyManager(*playerInfo.keyManager)
+	{
+		this->gameData.owner = this->gameData.ally = this;
 
-		gameData.patternMap = SokuLib::New<Map<int, CharacterSequenceData*>>(1, commonPatternData);
-		textures = SokuLib::New<Vector<int>>(1, commonTextures);
-		gameData.soundTable = SokuLib::New<int>(400);
-		memset(gameData.soundTable, 0, 400 * 4);
+		this->gameData.patternMap = SokuLib::New<Map<int, CharacterSequenceData*>>(1, commonPatternData);
+		this->textures = SokuLib::New<Vector<int>>(1, commonTextures);
+		this->gameData.soundTable = SokuLib::New<int>(400);
+		memset(this->gameData.soundTable, 0, 400 * 4);
 
-		characterIndex = playerInfo.character;
-		teamId = playerInfo.isRight;
-		paletteId = playerInfo.palette;
-		deckInfo.original = playerInfo.effectiveDeck;
-		deckInfo.queue = playerInfo.effectiveDeck;
-		if (playerInfo.keyManager)
-			inputData.unknown7CC = playerInfo.padding2;
+		this->characterIndex = playerInfo.character;
+		this->teamId = playerInfo.isRight;
+		this->paletteId = playerInfo.palette;
+		this->deckInfo.original = playerInfo.effectiveDeck;
+		this->deckInfo.queue = playerInfo.effectiveDeck;
+		if (!playerInfo.keyManager)
+			this->inputData.inputType = playerInfo.inputType;
 		else
-			inputData.unknown7CC = 0;
+			this->inputData.inputType = 0;
 	}
 
 	Player::~Player() {
-		for (int i = commonTextures.size(); i < textures->size(); ++i) SokuLib::textureMgr.remove(textures->at(i));
-		for (int i : spellBgTextures) SokuLib::textureMgr.remove(i);
-		if (portraitTexId) SokuLib::textureMgr.remove(portraitTexId);
-		for (int i = 0; i < 256; ++i) ((TextureManager *)0x89F9F8)->removeSound(gameData.soundTable[i]);
-		SokuLib::Delete(gameData.soundTable);
-		if (objectList) delete objectList; // has virtual destructor so we use delete
-		SokuLib::Delete(textures);
-		SokuLib::Delete(gameData.patternMap);
-		for (int i : deckInfo.textures) SokuLib::textureMgr.remove(i);
-		if (stand.texId) SokuLib::textureMgr.remove(stand.texId);
+		for (int i = commonTextures.size(); i < this->textures->size(); ++i)
+			SokuLib::textureMgr.remove(this->textures->at(i));
+		for (int i : this->spellBgTextures)
+			SokuLib::textureMgr.remove(i);
+		if (this->portraitTexId)
+			SokuLib::textureMgr.remove(this->portraitTexId);
+		for (int i = 0; i < 256; ++i)
+			// TODO: Move the sound stuff out of the TextureManager and create a SoundManager to hold it
+			((TextureManager *)0x89F9F8)->removeSound(this->gameData.soundTable[i]);
+		SokuLib::Delete(this->gameData.soundTable);
+		// TODO: Handle virtual destructors in SokuLib::Delete
+		delete this->objectList; // has virtual destructor so we use delete
+		SokuLib::Delete(this->textures);
+		SokuLib::Delete(this->gameData.patternMap);
+		for (int i : this->deckInfo.textures)
+			SokuLib::textureMgr.remove(i);
+		if (this->stand.texId)
+			SokuLib::textureMgr.remove(this->stand.texId);
 	}
 
-	SokuLib::CardInfo* Player::DeckInfo::cardLookup(unsigned short id)
-		{ return (this->*union_cast<SokuLib::CardInfo* (Player::DeckInfo::*)(unsigned short)>(0x436620))(id); }
-
+	SokuLib::CardInfo* Player::DeckInfo::cardLookup(unsigned short id) { return (this->*union_cast<SokuLib::CardInfo* (Player::DeckInfo::*)(unsigned short)>(0x436620))(id); }
 	void Player::loadResources() { return (this->*union_cast<void(Player::*)()>(0x46c0b0))(); }
 	bool Player::updateGroundMovement(float value) { return (this->*union_cast<bool(Player::*)(float)>(0x487740))(value); }
 	bool Player::updateAirMovement(float a0, float a1) { return (this->*union_cast<bool(Player::*)(float,float)>(0x4877C0))(a0, a1); }

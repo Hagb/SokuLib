@@ -147,7 +147,7 @@ namespace v2 {
 			Deque<unsigned short> commandInputBuffer;
 			MovementCombination movementCombination; // 46b9a0: = 0
 			CommandCombination commandCombination; // 46b9a0: = 0
-			char unknown7CC = 0; // type of input? (checks for 0, 1 or 2)
+			char inputType = 0; // type of input? (checks for 0, 1 or 2)
 			// align 0x3
 		} inputData;
 

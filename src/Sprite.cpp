@@ -105,5 +105,16 @@ namespace SokuLib
 		(this->*union_cast<void(SpriteEx::*)(float, float, float, float, float, float, float)>(0x7fb480))(x, y, w, h, .299f, .587, .114);
 	}
 
+	static const void *_loadPaletteAddr = (void*)0x00419f90;
+
+	void loadPalette(const char *name) {
+		__asm {
+			push edi
+			mov edi, ds:[SokuLib::Palette::currentPalette]
+			push name
+			call _loadPaletteAddr
+			pop edi
+		}
+	}
 	Palette &Palette::currentPalette = *reinterpret_cast<Palette *>(ADDR_CURRENT_PALETTE);
 }

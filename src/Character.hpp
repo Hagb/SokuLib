@@ -62,7 +62,7 @@ namespace SokuLib
 		Character character;
 		unsigned char isRight;
 		unsigned char palette;
-		unsigned char padding2;
+		unsigned char inputType;
 		unsigned char deck;
 		Deque<unsigned short> effectiveDeck;
 		KeyManager *keyManager;
