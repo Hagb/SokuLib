@@ -21,7 +21,7 @@ namespace SokuLib
 		virtual ~IEffectManager() {}
 		virtual void LoadPattern(const char* fileName, int reserve) = 0;
 		virtual void ClearPattern() = 0;
-		virtual v2::EffectObjectBase* CreateEffect(int action, float x, float y, Direction dir, char layer, int unknown164) = 0;
+		virtual v2::EffectObjectBase* CreateEffect(int action, float x, float y, char dir, char layer, int unknown164) = 0;
 		virtual void ClearEffects() = 0;
 		virtual void Update() = 0;
 		virtual void Render(char layer) = 0;
@@ -30,7 +30,7 @@ namespace SokuLib
 	};
 
 namespace v2 {
-	template<class T, void** base_vtable = (void**)ADDR_VTBL_FXMANAGER_EFFECT>
+	template<class T>
 	class EffectManager : public IEffectManager {
 	private:
 		static_assert(std::is_base_of<EffectObjectBase, T>::value);
@@ -46,28 +46,29 @@ namespace v2 {
 
 		EffectManager() = default;
 		virtual ~EffectManager() = default;
-		virtual void LoadPattern(const char* fileName, int reserve) override
-			{ return (this->*union_cast<void(IEffectManager::*)(LPCSTR, int)>(base_vtable[1]))(fileName, reserve); }
-		virtual void ClearPattern() override
-			{ return (this->*union_cast<void(IEffectManager::*)()>(base_vtable[2]))(); }
-		virtual EffectObjectBase* CreateEffect(int action, float x, float y, Direction dir, char layer, int unknown164) override
-			{ return (this->*union_cast<EffectObjectBase*(IEffectManager::*)(int, float, float, Direction, char, int)>(base_vtable[3]))(action, x, y, dir, layer, unknown164); }
-		virtual void ClearEffects() override
-			{ return (this->*union_cast<void(IEffectManager::*)()>(base_vtable[4]))(); }
-		virtual void Update() override
-			{ return (this->*union_cast<void(IEffectManager::*)()>(base_vtable[5]))(); }
-		virtual void Render(char arg_0) override
-			{ return (this->*union_cast<void(IEffectManager::*)(int)>(base_vtable[6]))(arg_0); }
-		virtual void vfUnknown7() override
-			{ return (this->*union_cast<void(IEffectManager::*)()>(base_vtable[7]))(); }
-		virtual void vfUnknown8(int arg_0) override
-			{ return (this->*union_cast<void(IEffectManager::*)(int)>(base_vtable[8]))(arg_0); }
+		void LoadPattern(const char* fileName, int reserve) override;
+		void ClearPattern() override;
+		v2::EffectObjectBase* CreateEffect(int action, float x, float y, char dir, char layer, int unknown164) override;
+		void ClearEffects() override;
+		void Update() override;
+		void Render(char layer) override;
+		void vfUnknown7() override;
+		void vfUnknown8(int unknown164) override;
 	};
 
-	using EffectManager_Effect = EffectManager<EffectObject, (void**)ADDR_VTBL_FXMANAGER_EFFECT>;
-	using EffectManager_InfoEffect = EffectManager<InfoEffectObject, (void**)ADDR_VTBL_FXMANAGER_INFOFX>;
-	using EffectManager_Select = EffectManager<SelectEffectObject, (void**)ADDR_VTBL_FXMANAGER_SELECT>;
-	using EffectManager_Weather = EffectManager<WeatherEffectObject, (void**)ADDR_VTBL_FXMANAGER_WEATHER>;
+	using EffectManager_Effect = EffectManager<EffectObject>;
+	using EffectManager_InfoEffect = EffectManager<InfoEffectObject>;
+	using EffectManager_Select = EffectManager<SelectEffectObject>;
+	using EffectManager_Weather = EffectManager<WeatherEffectObject>;
+
+	class SystemEffectManager {
+	public:
+		HandleManagerEx<SystemEffectObject> handles;
+		List<SystemEffectObject*> objects;
+
+		virtual ~SystemEffectManager() = default;
+		SystemEffectObject* createEffect(const char* textureName, short actionId, float x, float y); // 0x460560
+	}; // 0x60
 }
 }
 

@@ -9,20 +9,8 @@
 #include "Memory.hpp"
 #include <utility>
 
-#include <deque>
-#include <list>
-#include <vector>
-
 namespace SokuLib
 {
-#ifdef _DEBUG
-	template<typename T> class List : public std::list<T, Allocator<T> > {};
-	template<typename T> class Vector : public std::vector<T, Allocator<T> > {};
-#else
-	struct __STL_ALIGN { void *align; };
-	template<typename T> class List : private __STL_ALIGN, public std::list<T, Allocator<T> > {};
-	template<typename T> class Vector : private __STL_ALIGN, public std::vector<T, Allocator<T> > {};
-#endif
 
 	template<typename T1, typename T2>
 	class Map {
@@ -139,8 +127,8 @@ namespace SokuLib
 		void _erase(Node* root) {
 			for (Node* node = root; !node->isNil; root = node) {
 				_erase(node->right);
-				node = node->left;
 				node->val.~value_type();
+				node = node->left;
 				SokuLib::DeleteFct(root);
 			}
 		}
@@ -329,7 +317,7 @@ namespace SokuLib
 
 	public:
 		Map(const Map& o) : Map() {
-			this->head->parent = this->_copy(o.head, this->head);
+			this->head->parent = this->_copy(o.head->parent, this->head);
 			this->size = o.size;
 			if (this->head->parent->isNil) {
 				this->head->left = this->head;

@@ -54,14 +54,15 @@ namespace SokuLib
 		/* 31 */ CHARACTER_MURASA,
 		/* 32 */ CHARACTER_SEKIBANKI,
 		/* 33 */ CHARACTER_SATORI,
-		/* 34 */ CHARACTER_RAN
+		/* 34 */ CHARACTER_RAN,
+		/* 35 */ CHARACTER_TEWI
 	};
 
 	struct PlayerInfo {
 		Character character;
 		unsigned char isRight;
 		unsigned char palette;
-		unsigned char padding2;
+		unsigned char inputType;
 		unsigned char deck;
 		Deque<unsigned short> effectiveDeck;
 		KeyManager *keyManager;
@@ -78,6 +79,8 @@ namespace SokuLib
 	};
 
 	extern std::vector<std::string> charactersName;
+
+	extern char *(* const getCharName)(unsigned);
 
 	extern Character &leftChar;
 	extern Character &rightChar;

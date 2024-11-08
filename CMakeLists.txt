@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project(SokuLib)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 add_library(
 	SokuLib STATIC
@@ -121,9 +121,14 @@ add_library(
 	src/Misc.hpp
 	src/GameObject.cpp
 	src/GameObject.hpp
+	src/GameData.cpp
+	src/GameData.hpp
 	src/Player.cpp
 	src/Player.hpp
-	src/KeyCombination.hpp src/Menus/PauseMenu.cpp src/Menus/PauseMenu.hpp)
+	src/InputCombination.hpp
+	src/Menus/PauseMenu.cpp
+	src/Menus/PauseMenu.hpp
+)
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL Debug)
 	target_compile_definitions(
@@ -142,7 +147,7 @@ target_include_directories(SokuLibTests PRIVATE directx)
 target_link_libraries(SokuLibTests SokuLib)
 
 add_library(
-	SokuLibDllTests
+	SokuLibDllTests SHARED
 	test/main.dll.cpp
 )
 target_include_directories(SokuLibDllTests PRIVATE directx)

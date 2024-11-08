@@ -13,7 +13,7 @@
 #include "InputManager.hpp"
 #include "FrameData.hpp"
 #include "Boxes.hpp"
-#include "KeyCombination.hpp"
+#include "InputCombination.hpp"
 #include "DrawUtils.hpp"
 
 #pragma pack(push,1)
@@ -54,7 +54,7 @@ namespace SokuLib
 		void *vtable;
 
 		// 0x004
-		char offset_0x004[0xE8];
+		SokuLib::SpriteEx sprite;
 
 		//  ADDR_POINTXOFS          float             (4) 0x0EC
 		//  ADDR_POINTYOFS          float             (4) 0x0F0
@@ -68,10 +68,13 @@ namespace SokuLib
 		SokuLib::Vector2<float> gravity;
 
 		//  ADDR_DIRECTIONOFS       enum Direction    (1) 0x104
-		Direction direction;
+		char direction;
 
-		// 0x105
-		char offset_0x105[0xB];
+		// 0x105 (alignment)
+		char offset_0x105[0x3];
+
+		// 0x108
+		SokuLib::Vector2f center;
 
 		// 0x110
 		RenderInfo renderInfos;
@@ -227,19 +230,22 @@ namespace SokuLib
 		unsigned char offset_0x34D[1];
 
 		// 0x34E
-		unsigned char playerIndex;
+		char offset_0x34E;
 
 		// 0x34F
 		char offset_0x34F;
 
 		// 0x350
-		bool isRightPlayer;
+		char playerIndex;
 
 		// 0x351
-		char offset_0x351[0x14A];
+		char offset_0x351[0x149];
+
+		//  ADDR_AIRDASHCOUNTOFS    unsigned char     (1) 0x49A
+		unsigned char groundDashCount;
 
 		//  ADDR_AIRDASHCOUNTOFS    unsigned char     (1) 0x49B
-		unsigned char airdashCount;
+		unsigned char airDashCount;
 
 		char offset_0x49C[2];
 
@@ -334,13 +340,46 @@ namespace SokuLib
 		unsigned short grimoires;
 
 		// 0x562
-		char offset_0x562[0x11];
+		unsigned short offset_0x562;
+
+		// 0x564
+		Vector2f speedMultiplier;
+
+		// 0x56C
+		bool canGrazeMelees;
+
+		// 0x56D
+		bool crushOnWB;
+
+		// 0x56E
+		bool forceSkillsMax;
+
+		// 0x56F
+		bool offset_0x56F;
+
+		// 0x570
+		bool offset_0x570;
+
+		// 0x571
+		bool lockedInStageX;
+
+		// 0x572
+		bool lockedInStageY;
 
 		// 0x573
 		char score;
 
 		// 0x574
-		char offset_0x574[8];
+		bool roundLost;
+
+		// 0x575
+		char offset_0x575[2];
+
+		// 0x577
+		bool kdAnimationFinished;
+
+		// 0x578
+		char offset_0x578[4];
 
 		// 0x57C
 		DeckInfo deckInfo;
@@ -379,7 +418,13 @@ namespace SokuLib
 		ObjListManager &objects;
 
 		// 0x6FC
-		char offset_0x6FC[0x54];
+		char offset_0x6FC[0x48];
+
+		// 0x744
+		Vector2f additionalSpeed;
+
+		// 0x74C
+		char offset_0x74C[0x4];
 
 		//  ADDR_KEYMGROFS          KeyManager &      (4) 0x750
 		KeyManager *keyManager;
@@ -387,11 +432,11 @@ namespace SokuLib
 		// 0x754
 		KeyInput keyMap;
 
-		// 0x774
-		char offset_0x774[0x54];
+		// 0x77C
+		char offset_0x77C[0x4C];
 
 		// CF_PRESSED_COMBINATION 0x7C8 // KeyCombination
-		KeyCombination keyCombination;
+		CommandCombination keyCombination;
 
 		// 0x7CC
 		bool nameHidden;

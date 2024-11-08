@@ -5,8 +5,9 @@
 #ifndef SOKULIB_FRAMEDATA_HPP
 #define SOKULIB_FRAMEDATA_HPP
 
+
+#include "Vector.hpp"
 #include "Boxes.hpp"
-#include "Map.hpp"
 #include "Vector2.hpp"
 
 namespace SokuLib
@@ -170,6 +171,7 @@ namespace SokuLib
 		public:
 			enum RenderGroup : unsigned char { SPRITE = 0, TEXTURE = 1, WITHBLEND = 2 };
 
+			// 0x04
 			Vector2<short> offset = {0, 0};
 			short duration = 0;
 			short texIndex = 0;
@@ -180,14 +182,16 @@ namespace SokuLib
 			BlendOptions* blendOptionsPtr = 0;
 
 			virtual ~FrameData();
-		};
+		}; // 0x1C
 
 		class CharacterFrameData : public FrameData {
 		public:
+			// 0x1C
 			short damage, ratio, chipdamage, spiritdamage, untech, power, limit;
 			short onHitPStun, onHitEStun, onBlockPStun, onBlockEStun;
 			short onHitCardGain, onBlockCardGain, onAirHitSet, onGroundHitSet;
 			// align 0x2
+			// 0x3C
 			Vector2<float> onHitSpeed;
 			short onHitSFX, onHitFX;
 			unsigned char attackType, comboFlags;
@@ -195,10 +199,12 @@ namespace SokuLib
 			FrameFlags frameFlags;
 			AttackFlags attackFlags;
 
-			Box* collisionBox = 0;
-			Vector<Box> hitBoxes;
+			// 0x54
+			Box *collisionBox = nullptr;
+			Vector<Box> hurtBoxes;
 			Vector<Box> attackBoxes;
 			Vector<Box*> extraBoxes;
+			// 0x88
 			Vector2<int> extra1, extra2, extra3;
 			short unknownA0, unknownA2, unknownA4;
 			// align 0x2
@@ -208,9 +214,12 @@ namespace SokuLib
 
 		class SequenceData {
 		public:
+			// 0x04
 			Vector<FrameData> frames;
 			bool isLoop;
 			// align 0x3
+
+			// 0x18
 			SequenceData* previous; // if null then it is the first
 			SequenceData* next; // loops into the first
 
@@ -220,13 +229,18 @@ namespace SokuLib
 		class CharacterSequenceData {
 		public:
 			Vector<CharacterFrameData> frames;
-			short unknown10, unknown12; // moveLock and actionLock, but unsure how it works
+			// 0x10
+			short moveLock;
+			short actionLock;
 			bool isLoop;
 			// align 0x3
+
+			// 0x18
 			CharacterSequenceData* previous; // if null then it is the first
 			CharacterSequenceData* next; // loops into the first
 		};
 	}
 }
+
 
 #endif //SOKULIB_FRAMEDATA_HPP

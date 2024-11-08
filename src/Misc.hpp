@@ -9,6 +9,10 @@
 namespace SokuLib
 {
 	extern bool &SWRUnlinked;
+	unsigned int rand(unsigned int v);
+	unsigned int rand();
+	float cos(float angle); // In degrees
+	float sin(float angle); // In degrees
 }
 
 
